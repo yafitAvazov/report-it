@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#20683d" />
+    <title>Report It! | דיווחים לעיר נקייה</title>
+    <link rel="stylesheet" href="styles.css?v=12" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <button class="icon-button" type="button" aria-label="פתיחת תפריט" id="menuButton">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="brand" aria-label="Report It">
+          <span class="brand-mark">!</span><span>Report</span>
+        </div>
+        <button class="profile-button" type="button" aria-label="אזור אישי" id="profileButton">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 2c-4.42 0-8 2.02-8 4.5V20h16v-1.5c0-2.48-3.58-4.5-8-4.5Z"/></svg>
+        </button>
+      </header>
+
+      <section class="home-view" id="homeView">
+      <section class="page-heading" aria-labelledby="pageTitle">
+        <p class="eyebrow">עיר נקייה מתחילה בכולנו</p>
+        <h1 id="pageTitle">בוקר טוב, יעל</h1>
+        <p>ראי מה קורה בשכונה שלך היום.</p>
+      </section>
+
+      <section class="report-cta" aria-label="יצירת דיווח">
+        <div class="report-cta-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 21a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17Zm0-4v-5m-2.5 2.5h5"/></svg>
+        </div>
+        <div>
+          <h2>נתקלת במפגע?</h2>
+          <p>דיווח קצר יעזור לנו לטפל בו מהר.</p>
+        </div>
+        <button class="primary-button" id="newReportButton" type="button">דיווח על מפגע</button>
+      </section>
+
+      <section class="section-block map-block" aria-labelledby="mapTitle">
+        <div class="section-heading">
+          <div>
+            <h2 id="mapTitle">דיווחים בסביבה</h2>
+            <p>עודכנו היום</p>
+          </div>
+          <button class="text-button" id="nearbyButton" type="button">למפה המלאה</button>
+        </div>
+        <div class="map-preview" role="img" aria-label="תצוגה מקדימה של מפה עם שלושה דיווחים בסביבה">
+          <div class="street street-one"></div>
+          <div class="street street-two"></div>
+          <div class="street street-three"></div>
+          <div class="park park-one"></div>
+          <span class="map-label label-one">שכונת רימון</span>
+          <span class="map-label label-two">רחוב העצמאות</span>
+          <button class="map-pin pin-one" type="button" aria-label="דיווח: פח מלא ברחוב הראשי"><span>♻</span></button>
+          <button class="map-pin pin-two" type="button" aria-label="דיווח: אשפה בפארק"><span>♻</span></button>
+          <button class="map-pin pin-three" type="button" aria-label="דיווח: גזם על המדרכה"><span>♻</span></button>
+          <button class="location-button" type="button" aria-label="הצגת המיקום שלי">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3m0 12v3M3 12h3m12 0h3m-9 4a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <section class="section-block" aria-labelledby="recentTitle">
+        <div class="section-heading">
+          <div>
+            <h2 id="recentTitle">הדיווחים האחרונים שלי</h2>
+            <p>שלושה עדכונים שחשוב לראות</p>
+          </div>
+          <button class="text-button" id="allReportsButton" type="button">לכל הדיווחים</button>
+        </div>
+
+        <div class="reports-list" id="reportsList"></div>
+      </section>
+      </section>
+
+      <section class="account-view" id="accountView" hidden aria-labelledby="accountTitle">
+        <div class="report-page-heading">
+          <button class="back-button" type="button" id="backFromAccountButton" aria-label="חזרה למסך הבית"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7M8 12h10"/></svg></button>
+          <div><p class="eyebrow">האזור האישי</p><h1 id="accountTitle">החשבון שלי</h1><p>הדיווחים שלך נשמרים תחת החשבון הזה.</p></div>
+        </div>
+        <section class="account-card" id="signedInCard"><div class="avatar" id="accountAvatar">י</div><div><h2 id="accountName">יעל</h2><p id="accountEmail">yael@example.com</p></div><button class="text-button" id="logoutButton" type="button">התנתקות</button></section>
+        <section class="account-form-card" id="authCard" hidden><div class="auth-tabs"><button class="auth-tab is-active" type="button" data-auth-mode="login">התחברות</button><button class="auth-tab" type="button" data-auth-mode="signup">הרשמה</button></div><form id="authForm" novalidate><label id="signupNameLabel" for="signupName" hidden>שם מלא<input id="signupName" type="text" maxlength="50" placeholder="איך לפנות אלייך?" /></label><label for="authEmail">כתובת אימייל<input id="authEmail" type="email" inputmode="email" placeholder="name@example.com" /></label><p class="field-error" id="authError" aria-live="polite"></p><button class="primary-button" id="authSubmitButton" type="submit">התחברות</button></form><p class="privacy-note">הפרטים משמשים רק לשמירת הדיווחים ועדכוני סטטוס.</p></section>
+      </section>
+
+      <section class="nearby-view" id="nearbyView" hidden aria-labelledby="nearbyTitle">
+        <div class="report-page-heading list-page-heading">
+          <button class="back-button" type="button" id="backFromNearbyButton" aria-label="חזרה למסך הבית"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7M8 12h10"/></svg></button>
+          <div><p class="eyebrow">תמונת מצב קהילתית</p><h1 id="nearbyTitle">דיווחים בסביבה</h1><p>מפגעים שדווחו באזור שלך.</p></div>
+        </div>
+        <div class="nearby-filters">
+          <label class="filter-control" for="nearbyCategoryFilter"><span class="visually-hidden">סינון לפי סוג מפגע</span><select id="nearbyCategoryFilter"><option value="all">כל סוגי המפגעים</option><option value="אשפה ולכלוך">אשפה ולכלוך</option><option value="פח מלא">פח מלא</option><option value="גזם">גזם</option><option value="מפגע סביבתי">מפגע סביבתי</option></select></label>
+          <label class="filter-control" for="nearbyStatusFilter"><span class="visually-hidden">סינון לפי סטטוס</span><select id="nearbyStatusFilter"><option value="all">כל הסטטוסים</option><option value="pending">התקבל</option><option value="progress">בטיפול</option><option value="resolved">נפתר</option></select></label>
+        </div>
+        <div class="nearby-map" id="nearbyMap" role="region" aria-label="מפת דיווחים בסביבה"><span class="nearby-street nearby-street-a"></span><span class="nearby-street nearby-street-b"></span><span class="nearby-street nearby-street-c"></span><span class="nearby-park"></span><span class="nearby-label nearby-label-a">רחוב העצמאות</span><span class="nearby-label nearby-label-b">פארק הילדים</span><div id="nearbyMarkers"></div><button class="location-button nearby-location" id="nearbyLocationButton" type="button" aria-label="הצגת המיקום שלי"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3m0 12v3M3 12h3m12 0h3m-9 4a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/></svg></button><span class="map-data-note">נתוני מפה להדגמה</span></div>
+        <section class="nearby-empty" id="nearbyEmpty" hidden><span aria-hidden="true">🗺️</span><h2>אין דיווחים שמתאימים לסינון</h2><p>נסי להסיר חלק מהמסננים.</p></section>
+        <section class="nearby-sheet" id="nearbySheet" hidden aria-live="polite"><div class="sheet-handle"></div><div><span class="status" id="nearbySheetStatus"></span><h2 id="nearbySheetTitle"></h2><p id="nearbySheetMeta"></p></div><button class="outline-button" id="nearbyDetailButton" type="button">לפרטי הדיווח</button></section>
+      </section>
+
+      <section class="my-reports-view" id="myReportsView" hidden aria-labelledby="myReportsTitle">
+        <div class="report-page-heading list-page-heading">
+          <button class="back-button" type="button" id="backFromReportsButton" aria-label="חזרה למסך הבית">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7M8 12h10"/></svg>
+          </button>
+          <div>
+            <p class="eyebrow">האזור האישי שלך</p>
+            <h1 id="myReportsTitle">הדיווחים שלי</h1>
+            <p id="reportsSummary">כל הפניות ששלחת, מהחדש לישן.</p>
+          </div>
+        </div>
+        <div class="report-list-actions">
+          <button class="compact-new-report" id="listNewReportButton" type="button"><span aria-hidden="true">＋</span> דיווח חדש</button>
+          <label class="filter-control" for="statusFilter"><span class="visually-hidden">סינון דיווחים</span><select id="statusFilter"><option value="all">כל הסטטוסים</option><option value="pending">התקבל</option><option value="progress">בטיפול</option><option value="resolved">נפתר</option></select></label>
+        </div>
+        <div class="reports-list full-reports-list" id="myReportsList"></div>
+        <section class="empty-state" id="reportsEmptyState" hidden aria-live="polite">
+          <span aria-hidden="true">🔎</span><h2>לא נמצאו דיווחים</h2><p>נסי לבחור סטטוס אחר כדי לראות דיווחים נוספים.</p>
+          <button class="outline-button empty-filter-button" id="resetFilterButton" type="button">הצגת כל הדיווחים</button>
+        </section>
+      </section>
+
+      <section class="report-detail-view" id="reportDetailView" hidden aria-labelledby="detailTitle">
+        <div class="report-page-heading">
+          <button class="back-button" type="button" id="backFromDetailButton" aria-label="חזרה לדיווחים שלי">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7M8 12h10"/></svg>
+          </button>
+          <div>
+            <p class="eyebrow" id="detailReference">פנייה למוקד העירוני</p>
+            <h1 id="detailTitle">פרטי דיווח</h1>
+            <p id="detailDate"></p>
+          </div>
+        </div>
+        <section class="detail-hero">
+          <div class="detail-visual" id="detailVisual"><span id="detailIcon" aria-hidden="true"></span><img id="detailImage" alt="תמונת המפגע" hidden /></div>
+          <div class="detail-main"><span class="status" id="detailStatus"></span><h2 id="detailHeading"></h2><p id="detailDescription"></p></div>
+        </section>
+        <section class="detail-location" aria-labelledby="detailLocationTitle">
+          <div class="section-heading"><div><h2 id="detailLocationTitle">מיקום</h2><p id="detailLocationText"></p></div></div>
+          <div class="detail-map" role="img" aria-label="מיקום הדיווח על מפה"><span class="detail-road road-a"></span><span class="detail-road road-b"></span><span class="detail-park"></span><span class="detail-map-pin" aria-hidden="true">⌖</span><span class="detail-map-label">מיקום הדיווח</span></div>
+        </section>
+        <section class="timeline-section" aria-labelledby="timelineTitle">
+          <div class="section-heading"><div><h2 id="timelineTitle">מעקב טיפול</h2><p>עדכונים מהצוות העירוני</p></div></div>
+          <ol class="status-timeline" id="statusTimeline"></ol>
+        </section>
+      </section>
+
+      <section class="report-view" id="reportView" hidden aria-labelledby="reportTitle">
+        <div class="report-page-heading">
+          <button class="back-button" type="button" id="backToHomeButton" aria-label="חזרה למסך הבית">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7M8 12h10"/></svg>
+          </button>
+          <div>
+            <p class="eyebrow">דיווח חדש · שלב 1 מתוך 3</p>
+            <h1 id="reportTitle">ספרי לנו מה קרה</h1>
+            <p>כמה פרטים קצרים יעזרו לנו לטפל במפגע מהר.</p>
+          </div>
+        </div>
+
+        <form id="reportForm" novalidate>
+          <fieldset class="form-section">
+            <legend>איזה מפגע ראית? <span aria-hidden="true">*</span></legend>
+            <p class="field-hint">בחרי את הקטגוריה המתאימה ביותר</p>
+            <div class="category-grid" id="categoryGrid">
+              <label class="category-option"><input type="radio" name="category" value="אשפה ולכלוך" /><span class="category-icon">🗑️</span><span>אשפה ולכלוך</span></label>
+              <label class="category-option"><input type="radio" name="category" value="פח מלא" /><span class="category-icon">♻️</span><span>פח מלא</span></label>
+              <label class="category-option"><input type="radio" name="category" value="גזם" /><span class="category-icon">🌿</span><span>גזם</span></label>
+              <label class="category-option"><input type="radio" name="category" value="מפגע סביבתי" /><span class="category-icon">⚠️</span><span>מפגע סביבתי</span></label>
+              <label class="category-option"><input type="radio" name="category" value="אחר" /><span class="category-icon">•••</span><span>אחר</span></label>
+            </div>
+            <p class="field-error" id="categoryError" aria-live="polite"></p>
+          </fieldset>
+
+          <div class="form-section text-fields">
+            <label for="reportTitleInput">כותרת <span class="optional">(לא חובה)</span></label>
+            <input id="reportTitleInput" name="title" type="text" maxlength="70" placeholder="לדוגמה: אשפה מפוזרת ליד הגינה" />
+            <div class="field-row"><label for="reportDescription">תיאור קצר <span aria-hidden="true">*</span></label><span id="descriptionCount" class="character-count">0/300</span></div>
+            <textarea id="reportDescription" name="description" maxlength="300" rows="5" placeholder="מה ראית? פרטים קצרים יעזרו לצוות להגיע מוכן."></textarea>
+            <p class="field-error" id="descriptionError" aria-live="polite"></p>
+          </div>
+
+          <aside class="tip-card">
+            <span aria-hidden="true">💡</span><p>אין צורך בפרטים אישיים. בשלב הבא נבקש תמונה ומיקום.</p>
+          </aside>
+
+          <button class="primary-button next-button" type="submit">המשך לתמונה ולמיקום <span aria-hidden="true">←</span></button>
+        </form>
+      </section>
+
+      <section class="report-view" id="mediaLocationView" hidden aria-labelledby="mediaLocationTitle">
+        <div class="report-page-heading">
+          <button class="back-button" type="button" id="backToDetailsButton" aria-label="חזרה לפרטי המפגע">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7M8 12h10"/></svg>
+          </button>
+          <div>
+            <p class="eyebrow">דיווח חדש · שלב 2 מתוך 3</p>
+            <h1 id="mediaLocationTitle">תמונה ומיקום</h1>
+            <p>תמונה ומיקום מדויק עוזרים לצוות למצוא את המפגע.</p>
+          </div>
+        </div>
+
+        <section class="form-section" aria-labelledby="photoTitle">
+          <div class="field-title-row"><h2 id="photoTitle">הוספת תמונה <span class="optional">(לא חובה)</span></h2><span class="recommended-badge">מומלץ</span></div>
+          <p class="field-hint">אפשר לצלם עכשיו או לבחור תמונה מהטלפון.</p>
+          <div class="photo-empty-state" id="photoEmptyState">
+            <span class="photo-icon" aria-hidden="true">📷</span><strong>תמונה תעזור לנו להבין את המפגע</strong><span>אפשר להוסיף תמונה אחת</span>
+          </div>
+          <div class="photo-preview" id="photoPreview" hidden>
+            <img id="photoImage" alt="תצוגה מקדימה של התמונה שנבחרה" />
+            <button class="remove-photo-button" id="removePhotoButton" type="button" aria-label="הסרת התמונה">×</button>
+          </div>
+          <div class="photo-actions">
+            <label class="outline-button" for="cameraInput"><span aria-hidden="true">📸</span> צלמי תמונה</label>
+            <label class="outline-button" for="galleryInput"><span aria-hidden="true">🖼️</span> העלאה מהגלריה</label>
+          </div>
+          <input class="visually-hidden" id="cameraInput" type="file" accept="image/*" capture="environment" />
+          <input class="visually-hidden" id="galleryInput" type="file" accept="image/*" />
+        </section>
+
+        <section class="form-section location-section" aria-labelledby="locationTitle">
+          <div class="field-title-row"><h2 id="locationTitle">איפה נמצא המפגע? <span aria-hidden="true">*</span></h2></div>
+          <p class="field-hint">נשתמש במיקום רק לצורך הטיפול בדיווח.</p>
+          <div class="location-status" id="locationStatus" aria-live="polite">
+            <span class="location-status-icon" aria-hidden="true">⌖</span>
+            <div><strong>עדיין לא נבחר מיקום</strong><p>אפשר להשתמש במיקום הנוכחי או לבחור ידנית.</p></div>
+          </div>
+          <button class="location-action" id="useCurrentLocationButton" type="button"><span aria-hidden="true">⌖</span> השתמשי במיקום הנוכחי</button>
+          <button class="text-button select-map-button" id="toggleMapButton" type="button">או בחרי מקום במפה</button>
+          <div class="manual-map" id="manualMap" hidden>
+            <p>לחצי על המקום המשוער של המפגע</p>
+            <button class="selection-map" id="selectionMap" type="button" aria-label="מפת בחירה ידנית של מיקום המפגע">
+              <span class="map-road manual-road-one"></span><span class="map-road manual-road-two"></span><span class="map-green-area"></span><span class="manual-map-label label-a">רחוב העצמאות</span><span class="manual-map-label label-b">פארק הילדים</span><span class="selected-pin" id="selectedPin" hidden aria-hidden="true">⌖</span>
+            </button>
+            <span class="map-note">בחירה ידנית - מפת הרחובות המלאה תחובר בהמשך.</span>
+          </div>
+          <p class="field-error" id="locationError" aria-live="polite"></p>
+        </section>
+
+        <button class="primary-button next-button" id="reviewReportButton" type="button">המשך לסיכום הדיווח <span aria-hidden="true">←</span></button>
+      </section>
+
+      <section class="report-view" id="reviewView" hidden aria-labelledby="reviewTitle">
+        <div class="report-page-heading">
+          <button class="back-button" type="button" id="backToMediaButton" aria-label="חזרה לתמונה ולמיקום">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7M8 12h10"/></svg>
+          </button>
+          <div>
+            <p class="eyebrow">דיווח חדש · שלב 3 מתוך 3</p>
+            <h1 id="reviewTitle">הדיווח מוכן לשליחה</h1>
+            <p>עברו על הפרטים ובדקו שהכול נכון.</p>
+          </div>
+        </div>
+        <section class="review-card" aria-label="סיכום פרטי הדיווח">
+          <div class="review-photo" id="reviewPhoto"><span id="reviewPhotoPlaceholder" aria-hidden="true">🗑️</span><img id="reviewPhotoImage" alt="תמונת המפגע" hidden /></div>
+          <div class="review-main"><span class="status pending">דיווח חדש</span><h2 id="reviewReportHeading"></h2><p id="reviewReportDescription"></p></div>
+          <dl class="review-details">
+            <div><dt>סוג מפגע</dt><dd id="reviewCategory"></dd></div>
+            <div><dt>מיקום</dt><dd id="reviewLocation"></dd></div>
+          </dl>
+        </section>
+        <aside class="tip-card"><span aria-hidden="true">🔒</span><p>פרטי הדיווח ישמשו את העירייה לטיפול במפגע בלבד.</p></aside>
+        <button class="primary-button submit-button" id="submitReportButton" type="button">שלחי דיווח</button>
+        <p class="send-error" id="sendError" aria-live="polite"></p>
+      </section>
+
+      <section class="success-view" id="successView" hidden aria-labelledby="successTitle">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <p class="eyebrow">הדיווח התקבל</p>
+        <h1 id="successTitle">תודה שעזרת לשמור על העיר נקייה</h1>
+        <p>הדיווח הועבר לטיפול הצוות העירוני. נעדכן אותך כשהסטטוס ישתנה.</p>
+        <div class="reference-card"><span>מספר פנייה</span><strong id="referenceNumber"></strong></div>
+        <button class="primary-button" id="successHomeButton" type="button">חזרה למסך הבית</button>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="ניווט ראשי">
+      <button class="nav-item is-active" type="button" data-screen="home">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 10 8-6 8 6v9a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9Z"/></svg><span>בית</span>
+      </button>
+      <button class="nav-item" type="button" data-screen="nearby">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.25 7-12a7 7 0 1 0-14 0c0 5.75 7 12 7 12Zm0-9a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/></svg><span>בסביבה</span>
+      </button>
+      <button class="nav-item" type="button" data-screen="reports">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v18H7zM10 8h4m-4 4h4m-4 4h2"/></svg><span>הדיווחים שלי</span>
+      </button>
+    </nav>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="app.js?v=12"></script>
+  </body>
+</html>

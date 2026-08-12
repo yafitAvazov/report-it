@@ -5,14 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#20683d" />
     <title>Report It! | דיווחים לעיר נקייה</title>
-    <link rel="stylesheet" href="styles.css?v=12" />
+    <link href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=27" />
   </head>
   <body>
     <main class="app-shell">
       <header class="topbar">
-        <button class="icon-button" type="button" aria-label="פתיחת תפריט" id="menuButton">
-          <span></span><span></span><span></span>
-        </button>
         <div class="brand" aria-label="Report It">
           <span class="brand-mark">!</span><span>Report</span>
         </div>
@@ -47,17 +45,9 @@
           </div>
           <button class="text-button" id="nearbyButton" type="button">למפה המלאה</button>
         </div>
-        <div class="map-preview" role="img" aria-label="תצוגה מקדימה של מפה עם שלושה דיווחים בסביבה">
-          <div class="street street-one"></div>
-          <div class="street street-two"></div>
-          <div class="street street-three"></div>
-          <div class="park park-one"></div>
-          <span class="map-label label-one">שכונת רימון</span>
-          <span class="map-label label-two">רחוב העצמאות</span>
-          <button class="map-pin pin-one" type="button" aria-label="דיווח: פח מלא ברחוב הראשי"><span>♻</span></button>
-          <button class="map-pin pin-two" type="button" aria-label="דיווח: אשפה בפארק"><span>♻</span></button>
-          <button class="map-pin pin-three" type="button" aria-label="דיווח: גזם על המדרכה"><span>♻</span></button>
-          <button class="location-button" type="button" aria-label="הצגת המיקום שלי">
+        <div class="map-preview" aria-label="מפת דיווחים בסביבה">
+          <div class="map-canvas" id="homeMap"></div>
+          <button class="location-button" id="homeLocationButton" type="button" aria-label="הצגת המיקום שלי">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3m0 12v3M3 12h3m12 0h3m-9 4a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/></svg>
           </button>
         </div>
@@ -91,10 +81,10 @@
           <div><p class="eyebrow">תמונת מצב קהילתית</p><h1 id="nearbyTitle">דיווחים בסביבה</h1><p>מפגעים שדווחו באזור שלך.</p></div>
         </div>
         <div class="nearby-filters">
-          <label class="filter-control" for="nearbyCategoryFilter"><span class="visually-hidden">סינון לפי סוג מפגע</span><select id="nearbyCategoryFilter"><option value="all">כל סוגי המפגעים</option><option value="אשפה ולכלוך">אשפה ולכלוך</option><option value="פח מלא">פח מלא</option><option value="גזם">גזם</option><option value="מפגע סביבתי">מפגע סביבתי</option></select></label>
+          <label class="filter-control" for="nearbyCategoryFilter"><span class="visually-hidden">סינון לפי סוג מפגע</span><select id="nearbyCategoryFilter"><option value="all">כל סוגי המפגעים</option><option value="אשפה ולכלוך">אשפה ולכלוך</option><option value="פח מלא">פח מלא</option><option value="גזם">גזם</option><option value="מפגע סביבתי">מפגע סביבתי</option><option value="בור בכביש">בור בכביש</option><option value="תאורת רחוב">תאורת רחוב</option><option value="דליפת מים">דליפת מים</option><option value="מדרכה פגומה">מדרכה פגומה</option><option value="מפגע בטיחותי">מפגע בטיחותי</option></select></label>
           <label class="filter-control" for="nearbyStatusFilter"><span class="visually-hidden">סינון לפי סטטוס</span><select id="nearbyStatusFilter"><option value="all">כל הסטטוסים</option><option value="pending">התקבל</option><option value="progress">בטיפול</option><option value="resolved">נפתר</option></select></label>
         </div>
-        <div class="nearby-map" id="nearbyMap" role="region" aria-label="מפת דיווחים בסביבה"><span class="nearby-street nearby-street-a"></span><span class="nearby-street nearby-street-b"></span><span class="nearby-street nearby-street-c"></span><span class="nearby-park"></span><span class="nearby-label nearby-label-a">רחוב העצמאות</span><span class="nearby-label nearby-label-b">פארק הילדים</span><div id="nearbyMarkers"></div><button class="location-button nearby-location" id="nearbyLocationButton" type="button" aria-label="הצגת המיקום שלי"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3m0 12v3M3 12h3m12 0h3m-9 4a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/></svg></button><span class="map-data-note">נתוני מפה להדגמה</span></div>
+        <div class="nearby-map" id="nearbyMap" role="region" aria-label="מפת דיווחים בסביבה"><div class="map-canvas" id="nearbyMapCanvas"></div><button class="location-button nearby-location" id="nearbyLocationButton" type="button" aria-label="הצגת המיקום שלי"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3m0 12v3M3 12h3m12 0h3m-9 4a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/></svg></button></div>
         <section class="nearby-empty" id="nearbyEmpty" hidden><span aria-hidden="true">🗺️</span><h2>אין דיווחים שמתאימים לסינון</h2><p>נסי להסיר חלק מהמסננים.</p></section>
         <section class="nearby-sheet" id="nearbySheet" hidden aria-live="polite"><div class="sheet-handle"></div><div><span class="status" id="nearbySheetStatus"></span><h2 id="nearbySheetTitle"></h2><p id="nearbySheetMeta"></p></div><button class="outline-button" id="nearbyDetailButton" type="button">לפרטי הדיווח</button></section>
       </section>
@@ -138,7 +128,7 @@
         </section>
         <section class="detail-location" aria-labelledby="detailLocationTitle">
           <div class="section-heading"><div><h2 id="detailLocationTitle">מיקום</h2><p id="detailLocationText"></p></div></div>
-          <div class="detail-map" role="img" aria-label="מיקום הדיווח על מפה"><span class="detail-road road-a"></span><span class="detail-road road-b"></span><span class="detail-park"></span><span class="detail-map-pin" aria-hidden="true">⌖</span><span class="detail-map-label">מיקום הדיווח</span></div>
+          <div class="detail-map" aria-label="מיקום הדיווח על מפה"><div class="detail-map-canvas" id="detailMapCanvas"></div></div>
         </section>
         <section class="timeline-section" aria-labelledby="timelineTitle">
           <div class="section-heading"><div><h2 id="timelineTitle">מעקב טיפול</h2><p>עדכונים מהצוות העירוני</p></div></div>
@@ -167,6 +157,11 @@
               <label class="category-option"><input type="radio" name="category" value="פח מלא" /><span class="category-icon">♻️</span><span>פח מלא</span></label>
               <label class="category-option"><input type="radio" name="category" value="גזם" /><span class="category-icon">🌿</span><span>גזם</span></label>
               <label class="category-option"><input type="radio" name="category" value="מפגע סביבתי" /><span class="category-icon">⚠️</span><span>מפגע סביבתי</span></label>
+              <label class="category-option"><input type="radio" name="category" value="בור בכביש" /><span class="category-icon">🕳️</span><span>בור בכביש</span></label>
+              <label class="category-option"><input type="radio" name="category" value="תאורת רחוב" /><span class="category-icon">💡</span><span>תאורת רחוב</span></label>
+              <label class="category-option"><input type="radio" name="category" value="דליפת מים" /><span class="category-icon">💧</span><span>דליפת מים</span></label>
+              <label class="category-option"><input type="radio" name="category" value="מדרכה פגומה" /><span class="category-icon">🚧</span><span>מדרכה פגומה</span></label>
+              <label class="category-option"><input type="radio" name="category" value="מפגע בטיחותי" /><span class="category-icon">⚠️</span><span>מפגע בטיחותי</span></label>
               <label class="category-option"><input type="radio" name="category" value="אחר" /><span class="category-icon">•••</span><span>אחר</span></label>
             </div>
             <p class="field-error" id="categoryError" aria-live="polite"></p>
@@ -229,10 +224,9 @@
           <button class="text-button select-map-button" id="toggleMapButton" type="button">או בחרי מקום במפה</button>
           <div class="manual-map" id="manualMap" hidden>
             <p>לחצי על המקום המשוער של המפגע</p>
-            <button class="selection-map" id="selectionMap" type="button" aria-label="מפת בחירה ידנית של מיקום המפגע">
-              <span class="map-road manual-road-one"></span><span class="map-road manual-road-two"></span><span class="map-green-area"></span><span class="manual-map-label label-a">רחוב העצמאות</span><span class="manual-map-label label-b">פארק הילדים</span><span class="selected-pin" id="selectedPin" hidden aria-hidden="true">⌖</span>
-            </button>
-            <span class="map-note">בחירה ידנית - מפת הרחובות המלאה תחובר בהמשך.</span>
+            <div class="selection-map" id="selectionMap" role="application" aria-label="מפת בחירה ידנית של מיקום המפגע"></div>
+            <span class="map-note" id="mapSelectionNote">טוענים את המפה…</span>
+            <button class="outline-button confirm-map-location" id="confirmMapLocationButton" type="button">סמני את מרכז המפה</button>
           </div>
           <p class="field-error" id="locationError" aria-live="polite"></p>
         </section>
@@ -287,6 +281,7 @@
     </nav>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="app.js?v=12"></script>
+    <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
+    <script src="app.js?v=27"></script>
   </body>
 </html>

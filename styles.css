@@ -61,7 +61,7 @@ button:focus-visible { outline: 3px solid #136cdf; outline-offset: 3px; }
 
 .reports-list { display: grid; gap: 10px; }
 .report-card { display: grid; grid-template-columns: 64px 1fr auto; gap: 12px; align-items: center; padding: 10px; border: 1px solid var(--line); border-radius: 15px; background: var(--white); box-shadow: 0 2px 7px rgb(30 51 34 / 3%); }
-.report-visual { display: grid; width: 64px; height: 64px; place-items: center; border-radius: 10px; font-size: 29px; }
+.report-visual { display: grid; width: 64px; height: 64px; place-items: center; overflow: hidden; border-radius: 10px; font-size: 29px; }
 .report-visual.litter { background: #f4e8d6; }.report-visual.garden { background: #e0f1d6; }.report-visual.bin { background: #e0edf8; }
 .report-content h3 { margin: 0 0 4px; font-size: 15px; }.report-content p { margin: 0; color: var(--muted); font-size: 12px; }.report-content p + p { margin-top: 4px; }
 .status { justify-self: end; padding: 5px 8px; border-radius: 999px; font-size: 11px; font-weight: 800; white-space: nowrap; }.status.pending { background: #fff0d9; color: #a45b0e; }.status.progress { background: #fff6d3; color: #84600c; }.status.resolved { background: #dcf4e8; color: #137348; }
@@ -101,8 +101,15 @@ body.is-reporting .bottom-nav { display: none; } body.is-reporting .toast { bott
 .maplibregl-ctrl-bottom-left, .maplibregl-ctrl-bottom-right { z-index: 2; }
 .report-visual img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; }
 .detail-visual { height: clamp(180px, 34vh, 270px); background: #f2f6f1; }
-.detail-visual img { object-fit: contain; }
+.detail-visual img { object-fit: cover; }
 .detail-main { text-align: right; }
 .detail-main h2, .detail-main p { direction: rtl; unicode-bidi: plaintext; }
 .detail-map { height: 190px; background: #eaf0e6; }
 .detail-map-canvas { position: absolute; inset: 0; }
+.image-preview-trigger { cursor: zoom-in; }
+.image-preview-trigger:focus-visible { outline: 3px solid #136cdf; outline-offset: -4px; }
+.image-lightbox { width: min(100% - 32px, 760px); max-width: none; max-height: min(92dvh, 900px); margin: auto; padding: 0; overflow: visible; border: 0; border-radius: 18px; background: transparent; }
+.image-lightbox::backdrop { background: rgb(9 18 12 / 78%); backdrop-filter: blur(3px); }
+.image-lightbox-content { position: relative; display: grid; max-height: min(92dvh, 900px); place-items: center; padding: 10px; border-radius: 18px; background: #111813; box-shadow: 0 18px 60px rgb(0 0 0 / 35%); }
+.image-lightbox img { display: block; max-width: 100%; max-height: calc(min(92dvh, 900px) - 20px); border-radius: 10px; object-fit: contain; }
+.lightbox-close { position: absolute; z-index: 1; top: -13px; left: -13px; display: grid; width: 40px; height: 40px; place-items: center; border: 2px solid var(--white); border-radius: 50%; background: var(--forest); color: var(--white); font-size: 30px; line-height: 1; cursor: pointer; box-shadow: 0 4px 12px rgb(0 0 0 / 28%); }

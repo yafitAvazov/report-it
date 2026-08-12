@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#20683d" />
     <title>Report It! | דיווחים לעיר נקייה</title>
     <link href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=27" />
+    <link rel="stylesheet" href="styles.css?v=28" />
   </head>
   <body>
     <main class="app-shell">
@@ -123,7 +123,7 @@
           </div>
         </div>
         <section class="detail-hero">
-          <div class="detail-visual" id="detailVisual"><span id="detailIcon" aria-hidden="true"></span><img id="detailImage" alt="תמונת המפגע" hidden /></div>
+          <div class="detail-visual" id="detailVisual"><span id="detailIcon" aria-hidden="true"></span><img class="image-preview-trigger" id="detailImage" alt="תמונת המפגע — לחצי להגדלה" role="button" tabindex="0" hidden /></div>
           <div class="detail-main"><span class="status" id="detailStatus"></span><h2 id="detailHeading"></h2><p id="detailDescription"></p></div>
         </section>
         <section class="detail-location" aria-labelledby="detailLocationTitle">
@@ -202,7 +202,7 @@
             <span class="photo-icon" aria-hidden="true">📷</span><strong>תמונה תעזור לנו להבין את המפגע</strong><span>אפשר להוסיף תמונה אחת</span>
           </div>
           <div class="photo-preview" id="photoPreview" hidden>
-            <img id="photoImage" alt="תצוגה מקדימה של התמונה שנבחרה" />
+            <img class="image-preview-trigger" id="photoImage" alt="תצוגה מקדימה של התמונה שנבחרה — לחצי להגדלה" role="button" tabindex="0" />
             <button class="remove-photo-button" id="removePhotoButton" type="button" aria-label="הסרת התמונה">×</button>
           </div>
           <div class="photo-actions">
@@ -246,7 +246,7 @@
           </div>
         </div>
         <section class="review-card" aria-label="סיכום פרטי הדיווח">
-          <div class="review-photo" id="reviewPhoto"><span id="reviewPhotoPlaceholder" aria-hidden="true">🗑️</span><img id="reviewPhotoImage" alt="תמונת המפגע" hidden /></div>
+          <div class="review-photo" id="reviewPhoto"><span id="reviewPhotoPlaceholder" aria-hidden="true">🗑️</span><img class="image-preview-trigger" id="reviewPhotoImage" alt="תמונת המפגע — לחצי להגדלה" role="button" tabindex="0" hidden /></div>
           <div class="review-main"><span class="status pending">דיווח חדש</span><h2 id="reviewReportHeading"></h2><p id="reviewReportDescription"></p></div>
           <dl class="review-details">
             <div><dt>סוג מפגע</dt><dd id="reviewCategory"></dd></div>
@@ -281,7 +281,14 @@
     </nav>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <dialog class="image-lightbox" id="imageLightbox" aria-labelledby="imageLightboxTitle">
+      <div class="image-lightbox-content">
+        <button class="lightbox-close" id="closeImageLightbox" type="button" aria-label="סגירת התמונה">×</button>
+        <p class="visually-hidden" id="imageLightboxTitle">תצוגת תמונה מלאה</p>
+        <img id="imageLightboxImage" alt="תמונה מלאה של המפגע" />
+      </div>
+    </dialog>
     <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
-    <script src="app.js?v=27"></script>
+    <script src="app.js?v=31"></script>
   </body>
 </html>

@@ -1,7 +1,7 @@
 const defaultReports = [
-  { id: "demo-1", title: "אשפה בפארק", category: "אשפה ולכלוך", description: "אשפה מפוזרת ליד מתקני המשחקים בפארק הילדים.", place: "פארק הילדים · לפני שעתיים", location: "פארק הילדים, רחוב הגפן", status: "התקבל", type: "pending", visual: "litter", icon: "🗑️", mapX: 34, mapY: 35, timeline: [{ title: "הדיווח התקבל", text: "הפנייה נקלטה במערכת העירונית.", time: "היום, 10:32" }] },
-  { id: "demo-2", title: "פח מלא ברחוב הראשי", category: "פח מלא", description: "הפח בפינת הרחוב מלא ואשפה נמצאת גם סביבו.", place: "רחוב העצמאות · אתמול", location: "רחוב העצמאות 18", status: "בטיפול", type: "progress", visual: "bin", icon: "♻️", mapX: 68, mapY: 49, timeline: [{ title: "הדיווח התקבל", text: "הפנייה נקלטה במערכת העירונית.", time: "אתמול, 16:05" }, { title: "הועבר לטיפול", text: "הדיווח הועבר לצוות הניקיון האזורי.", time: "היום, 08:15" }] },
-  { id: "demo-3", title: "גזם על המדרכה", category: "גזם", description: "ערימת גזם חוסמת חלק מהמעבר על המדרכה.", place: "רחוב הגפן · לפני יומיים", location: "רחוב הגפן 7", status: "נפתר", type: "resolved", visual: "garden", icon: "🌿", mapX: 48, mapY: 76, timeline: [{ title: "הדיווח התקבל", text: "הפנייה נקלטה במערכת העירונית.", time: "לפני יומיים, 11:20" }, { title: "הועבר לטיפול", text: "הדיווח הועבר לצוות הניקיון האזורי.", time: "לפני יומיים, 13:40" }, { title: "הטיפול הושלם", text: "הצוות עדכן שהגזם נאסף.", time: "אתמול, 09:10" }] },
+  { id: "demo-1", title: "אשפה בפארק", category: "אשפה ולכלוך", description: "אשפה מפוזרת ליד מתקני המשחקים בפארק הילדים.", place: "פארק הילדים · לפני שעתיים", location: "רחוב הגפן, תל אביב-יפו", status: "התקבל", type: "pending", visual: "litter", icon: "🗑️", coordinates: [34.7819, 32.0854], timeline: [{ title: "הדיווח התקבל", text: "הפנייה נקלטה במערכת העירונית.", time: "היום, 10:32" }] },
+  { id: "demo-2", title: "פח מלא ברחוב הראשי", category: "פח מלא", description: "הפח בפינת הרחוב מלא ואשפה נמצאת גם סביבו.", place: "רחוב העצמאות · אתמול", location: "העצמאות 18, תל אביב-יפו", status: "בטיפול", type: "progress", visual: "bin", icon: "♻️", coordinates: [34.7789, 32.0871], timeline: [{ title: "הדיווח התקבל", text: "הפנייה נקלטה במערכת העירונית.", time: "אתמול, 16:05" }, { title: "הועבר לטיפול", text: "הדיווח הועבר לצוות הניקיון האזורי.", time: "היום, 08:15" }] },
+  { id: "demo-3", title: "גזם על המדרכה", category: "גזם", description: "ערימת גזם חוסמת חלק מהמעבר על המדרכה.", place: "רחוב הגפן · לפני יומיים", location: "רחוב הגפן 7, תל אביב-יפו", status: "נפתר", type: "resolved", visual: "garden", icon: "🌿", coordinates: [34.7846, 32.0834], timeline: [{ title: "הדיווח התקבל", text: "הפנייה נקלטה במערכת העירונית.", time: "לפני יומיים, 11:20" }, { title: "הועבר לטיפול", text: "הדיווח הועבר לצוות הניקיון האזורי.", time: "לפני יומיים, 13:40" }, { title: "הטיפול הושלם", text: "הצוות עדכן שהגזם נאסף.", time: "אתמול, 09:10" }] },
 ];
 
 function readLocal(key, fallback) {
@@ -16,7 +16,12 @@ function readLocal(key, fallback) {
 const reports = readLocal("report-it-reports", defaultReports);
 
 function saveReports() {
-  localStorage.setItem("report-it-reports", JSON.stringify(reports.map(({ imageUrl, ...report }) => report)));
+  try {
+    localStorage.setItem("report-it-reports", JSON.stringify(reports));
+  } catch {
+    localStorage.setItem("report-it-reports", JSON.stringify(reports.map(({ imageUrl, ...report }) => report)));
+    showToast("התמונה גדולה מדי לשמירה קבועה, אך הדיווח נשמר.");
+  }
 }
 
 const reportsList = document.querySelector("#reportsList");
@@ -45,7 +50,7 @@ const locationStatus = document.querySelector("#locationStatus");
 const useCurrentLocationButton = document.querySelector("#useCurrentLocationButton");
 const manualMap = document.querySelector("#manualMap");
 const selectionMap = document.querySelector("#selectionMap");
-const selectedPin = document.querySelector("#selectedPin");
+const mapSelectionNote = document.querySelector("#mapSelectionNote");
 const locationError = document.querySelector("#locationError");
 const reviewPhotoImage = document.querySelector("#reviewPhotoImage");
 const reviewPhotoPlaceholder = document.querySelector("#reviewPhotoPlaceholder");
@@ -60,7 +65,7 @@ const reportsEmptyState = document.querySelector("#reportsEmptyState");
 const detailVisual = document.querySelector("#detailVisual");
 const detailIcon = document.querySelector("#detailIcon");
 const detailImage = document.querySelector("#detailImage");
-const nearbyMarkers = document.querySelector("#nearbyMarkers");
+const detailMapCanvas = document.querySelector("#detailMapCanvas");
 const nearbyCategoryFilter = document.querySelector("#nearbyCategoryFilter");
 const nearbyStatusFilter = document.querySelector("#nearbyStatusFilter");
 let selectedNearbyReportId = null;
@@ -71,6 +76,166 @@ let selectedLocation = null;
 let reportCounter = 3074;
 let currentUser = readLocal("report-it-user", { name: "יעל", email: "yael@example.com" });
 let authMode = "login";
+const defaultMapCenter = [34.7818, 32.0853];
+const mapStyle = "https://tiles.openfreemap.org/styles/liberty";
+const rtlTextPluginUrl = "https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.3.0/dist/mapbox-gl-rtl-text.js";
+let homeMap;
+let nearbyMap;
+let selectionMapInstance;
+let selectionMarker;
+let mapSelectionOverlay;
+let nearbyMapMarkers = [];
+let detailMap;
+let detailMapMarker;
+
+function createMap(container, zoom) {
+  if (!window.maplibregl) return null;
+  return new maplibregl.Map({ container, style: mapStyle, center: defaultMapCenter, zoom, attributionControl: true });
+}
+
+function reportMarker(report, selected = false) {
+  const element = document.createElement("button");
+  element.type = "button";
+  element.className = `report-map-marker${selected ? " is-selected" : ""}`;
+  element.setAttribute("aria-label", `${report.title}, ${report.status}`);
+  element.innerHTML = `<span>${report.icon}</span>`;
+  element.addEventListener("click", () => selectNearbyReport(report.id));
+  return new maplibregl.Marker({ element, anchor: "bottom" }).setLngLat(report.coordinates || defaultMapCenter);
+}
+
+function renderMapMarkers(visibleReports) {
+  nearbyMapMarkers.forEach((marker) => marker.remove());
+  nearbyMapMarkers = [];
+  if (!nearbyMap) return;
+  nearbyMapMarkers = visibleReports.map((report) => reportMarker(report, report.id === selectedNearbyReportId).addTo(nearbyMap));
+}
+
+function selectNearbyReport(reportId) {
+  selectedNearbyReportId = reportId;
+  const report = reports.find((item) => item.id === reportId);
+  if (!report) return;
+  const status = document.querySelector("#nearbySheetStatus");
+  status.className = `status ${report.type}`;
+  status.textContent = report.status;
+  document.querySelector("#nearbySheetTitle").textContent = report.title;
+  document.querySelector("#nearbySheetMeta").textContent = `${report.location} · ${report.place}`;
+  document.querySelector("#nearbySheet").hidden = false;
+  nearbyMap?.flyTo({ center: report.coordinates || defaultMapCenter, zoom: Math.max(nearbyMap.getZoom(), 15) });
+  renderNearbyReports();
+}
+
+function initializeMaps() {
+  homeMap = createMap("homeMap", 14.5);
+  nearbyMap = createMap("nearbyMapCanvas", 14.5);
+  if (!homeMap || !nearbyMap) {
+    showToast("לא הצלחנו לטעון את המפה. בדקי את החיבור לאינטרנט.");
+    return;
+  }
+  homeMap.on("load", () => reports.slice(0, 3).forEach((report) => reportMarker(report).addTo(homeMap)));
+  nearbyMap.on("load", () => renderNearbyReports());
+}
+
+function updateDetailMap(report) {
+  if (!window.maplibregl) return;
+  if (!detailMap) detailMap = createMap("detailMapCanvas", 16);
+  if (!detailMap) return;
+  const coordinates = report.coordinates || defaultMapCenter;
+  detailMapMarker?.remove();
+  detailMapMarker = new maplibregl.Marker({ color: "#20683d" }).setLngLat(coordinates).addTo(detailMap);
+  detailMap.flyTo({ center: coordinates, zoom: 16, essential: true });
+  window.setTimeout(() => detailMap.resize(), 0);
+}
+
+async function initializeMapSupport() {
+  if (!window.maplibregl?.setRTLTextPlugin) {
+    initializeMaps();
+    return;
+  }
+
+  try {
+    await maplibregl.setRTLTextPlugin(rtlTextPluginUrl, false);
+  } catch {
+    // The map remains usable if the optional language plugin cannot load.
+  }
+  initializeMaps();
+}
+
+function ensureSelectionMap() {
+  if (selectionMapInstance) {
+    selectionMapInstance.resize();
+    return;
+  }
+  selectionMapInstance = createMap("selectionMap", 15);
+  if (!selectionMapInstance) {
+    mapSelectionNote.textContent = "לא הצלחנו לטעון את המפה. נסי שוב בעוד רגע.";
+    return;
+  }
+  mapSelectionOverlay = document.createElement("button");
+  mapSelectionOverlay.className = "map-selection-overlay";
+  mapSelectionOverlay.type = "button";
+  mapSelectionOverlay.setAttribute("aria-label", "לחצי לסימון מיקום במפה");
+  selectionMap.append(mapSelectionOverlay);
+  selectionMapInstance.on("load", () => {
+    mapSelectionNote.textContent = "לחצי על המפה כדי לסמן את מיקום המפגע.";
+    selectionMapInstance.resize();
+  });
+  mapSelectionOverlay.addEventListener("click", (event) => {
+    const bounds = selectionMap.getBoundingClientRect();
+    const relativeX = (event.clientX - bounds.left) / bounds.width - 0.5;
+    const relativeY = (event.clientY - bounds.top) / bounds.height - 0.5;
+    const scale = 0.012 / 2 ** (selectionMapInstance.getZoom() - 14);
+    const coordinates = [
+      selectionMapInstance.getCenter().lng + relativeX * scale,
+      selectionMapInstance.getCenter().lat - relativeY * scale,
+    ];
+    selectMapLocation(coordinates);
+    mapSelectionNote.textContent = "המיקום סומן. אפשר להמשיך לסיכום הדיווח.";
+  }, true);
+}
+
+function selectMapLocation(coordinates) {
+  setLocation("מיקום נבחר במפה", `${coordinates[1].toFixed(5)}, ${coordinates[0].toFixed(5)}`, coordinates);
+  reverseGeocodeSelectedLocation(coordinates);
+  try {
+    if (!selectionMarker) selectionMarker = new maplibregl.Marker({ color: "#20683d" }).addTo(selectionMapInstance);
+    selectionMarker.setLngLat(coordinates);
+  } catch {
+    // The report can proceed even if the marker cannot render during a map reload.
+  }
+}
+
+async function reverseGeocodeSelectedLocation([longitude, latitude]) {
+  if (!selectedLocation || selectedLocation.coordinates?.[0] !== longitude || selectedLocation.coordinates?.[1] !== latitude) return;
+  selectedLocation.addressPending = true;
+  selectedLocation.addressResolved = false;
+  locationStatus.querySelector("strong").textContent = "מאתרים רחוב ועיר…";
+  locationStatus.querySelector("p").textContent = "הכתובת תישמר יחד עם הדיווח.";
+  try {
+    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&accept-language=he&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`);
+    if (!response.ok) throw new Error("Address lookup failed");
+    const { address = {} } = await response.json();
+    const street = [address.road || address.pedestrian || address.footway || address.neighbourhood, address.house_number].filter(Boolean).join(" ");
+    const city = address.city || address.town || address.village || address.municipality || address.city_district || address.county;
+    if (!street && !city) throw new Error("No address found");
+    const addressText = [street || "מיקום שסומן", city].filter(Boolean).join(", ");
+    if (selectedLocation?.coordinates?.[0] === longitude && selectedLocation?.coordinates?.[1] === latitude) {
+      selectedLocation.details = addressText;
+      selectedLocation.title = addressText;
+      selectedLocation.addressPending = false;
+      selectedLocation.addressResolved = true;
+      locationStatus.querySelector("strong").textContent = "המיקום נבחר";
+      locationStatus.querySelector("p").textContent = addressText;
+    }
+  } catch {
+    if (selectedLocation?.coordinates?.[0] === longitude && selectedLocation?.coordinates?.[1] === latitude) {
+      selectedLocation.addressPending = false;
+      selectedLocation.addressResolved = false;
+      locationStatus.querySelector("strong").textContent = "לא נמצאה כתובת למיקום";
+      locationStatus.querySelector("p").textContent = "נסי לסמן מקום קרוב יותר לרחוב.";
+      locationError.textContent = "לא הצלחנו להמיר את הנקודה לרחוב ולעיר. נסי לבחור מקום אחר במפה.";
+    }
+  }
+}
 
 function renderReports() {
   reportsList.innerHTML = reports.slice(0, 3).map((report) => reportCardTemplate(report)).join("");
@@ -82,17 +247,20 @@ function renderNearbyReports() {
   const category = nearbyCategoryFilter.value;
   const status = nearbyStatusFilter.value;
   const visible = reports.filter((report) => (category === "all" || report.category === category) && (status === "all" || report.type === status));
-  nearbyMarkers.innerHTML = visible.map((report) => `<button class="nearby-marker ${report.id === selectedNearbyReportId ? "is-selected" : ""}" type="button" data-report-id="${report.id}" style="right:${report.mapX ?? 55}%;top:${report.mapY ?? 55}%" aria-label="${escapeHtml(report.title)}, ${escapeHtml(report.status)}"><span>${report.icon}</span></button>`).join("");
+  renderMapMarkers(visible);
   document.querySelector("#nearbyEmpty").hidden = visible.length > 0;
   document.querySelector("#nearbyMap").hidden = visible.length === 0;
   if (!visible.some((report) => report.id === selectedNearbyReportId)) document.querySelector("#nearbySheet").hidden = true;
 }
 
 function reportCardTemplate(report, full = false) {
+  const visual = report.imageUrl
+    ? `<img src="${escapeHtml(report.imageUrl)}" alt="תמונת המפגע: ${escapeHtml(report.title)}" />`
+    : escapeHtml(report.icon);
   return `
     <${full ? "button" : "article"} class="report-card ${full ? "full-report-card" : ""}" ${full ? `type="button" data-report-id="${report.id}"` : "tabindex=\"0\""} aria-label="${escapeHtml(report.title)}, ${escapeHtml(report.status)}">
-      <div class="report-visual ${report.visual}" aria-hidden="true">${report.icon}</div>
-      <div class="report-content"><h3>${escapeHtml(report.title)}</h3><p>${escapeHtml(report.place)}</p><p>הדיווח עודכן לאחרונה היום</p></div>
+      <div class="report-visual ${report.visual}">${visual}</div>
+      <div class="report-content"><h3>${escapeHtml(report.title)}</h3><p>${escapeHtml(report.location)}</p><p>${escapeHtml(report.place)}</p></div>
       <span class="status ${report.type}">${escapeHtml(report.status)}</span>
     </${full ? "button" : "article"}>
   `;
@@ -210,6 +378,7 @@ function openNearby() {
   document.body.classList.remove("is-reporting");
   document.querySelectorAll(".nav-item").forEach((button) => button.classList.toggle("is-active", button.dataset.screen === "nearby"));
   renderNearbyReports();
+  window.setTimeout(() => nearbyMap?.resize(), 0);
   window.scrollTo({ top: 0, behavior: "instant" });
 }
 
@@ -245,6 +414,7 @@ function openReportDetail(reportId, origin = "myReports") {
   myReportsView.hidden = true;
   nearbyView.hidden = true;
   reportDetailView.hidden = false;
+  updateDetailMap(report);
   document.body.classList.add("is-reporting");
   window.scrollTo({ top: 0, behavior: "instant" });
 }
@@ -273,13 +443,21 @@ function returnToDetails() {
 }
 
 function openReview() {
+  if (selectedLocation.addressPending) {
+    showToast("מאתרים את הרחוב והעיר… נסי שוב בעוד רגע.");
+    return;
+  }
+  if (!selectedLocation.addressResolved) {
+    locationError.textContent = "צריך רחוב ועיר כדי לשמור את הדיווח. נסי לבחור מקום אחר במפה.";
+    return;
+  }
   const category = reportForm.elements.category.value;
   const title = document.querySelector("#reportTitleInput").value.trim();
   const description = descriptionInput.value.trim();
   reviewReportHeading.textContent = title || category;
   reviewReportDescription.textContent = description;
   reviewCategory.textContent = category;
-  reviewLocation.textContent = selectedLocation.title;
+  reviewLocation.textContent = selectedLocation.details;
   reviewPhotoImage.hidden = !selectedImageUrl;
   reviewPhotoPlaceholder.hidden = Boolean(selectedImageUrl);
   if (selectedImageUrl) reviewPhotoImage.src = selectedImageUrl;
@@ -304,7 +482,9 @@ function resetDraft() {
   locationStatus.querySelector("strong").textContent = "עדיין לא נבחר מיקום";
   locationStatus.querySelector("p").textContent = "אפשר להשתמש במיקום הנוכחי או לבחור ידנית.";
   manualMap.hidden = true;
-  selectedPin.hidden = true;
+  selectionMarker?.remove();
+  selectionMarker = null;
+  mapSelectionNote.textContent = "לחצי על המפה כדי לסמן את מיקום המפגע.";
   locationError.textContent = "";
 }
 
@@ -330,7 +510,6 @@ document.querySelector("#backFromAccountButton").addEventListener("click", close
 document.querySelector("#listNewReportButton").addEventListener("click", openReportForm);
 document.querySelector("#nearbyButton").addEventListener("click", openNearby);
 document.querySelector("#allReportsButton").addEventListener("click", openMyReports);
-document.querySelector("#menuButton").addEventListener("click", () => showToast("התפריט יתווסף יחד עם האזור האישי."));
 document.querySelector("#profileButton").addEventListener("click", openAccount);
 
 document.querySelectorAll(".nav-item").forEach((button) => {
@@ -366,22 +545,20 @@ myReportsList.addEventListener("click", (event) => {
 
 nearbyCategoryFilter.addEventListener("change", renderNearbyReports);
 nearbyStatusFilter.addEventListener("change", renderNearbyReports);
-nearbyMarkers.addEventListener("click", (event) => {
-  const marker = event.target.closest(".nearby-marker");
-  if (!marker) return;
-  selectedNearbyReportId = marker.dataset.reportId;
-  const report = reports.find((item) => item.id === selectedNearbyReportId);
-  if (!report) return;
-  const status = document.querySelector("#nearbySheetStatus");
-  status.className = `status ${report.type}`;
-  status.textContent = report.status;
-  document.querySelector("#nearbySheetTitle").textContent = report.title;
-  document.querySelector("#nearbySheetMeta").textContent = `${report.location} · ${report.place}`;
-  document.querySelector("#nearbySheet").hidden = false;
-  renderNearbyReports();
-});
 document.querySelector("#nearbyDetailButton").addEventListener("click", () => openReportDetail(selectedNearbyReportId, "nearby"));
-document.querySelector("#nearbyLocationButton").addEventListener("click", () => showToast("המיקום שלך יוצג במפה לאחר חיבור לשירות מפות."));
+function centerMapOnCurrentLocation(map) {
+  if (!navigator.geolocation) {
+    showToast("הדפדפן במכשיר הזה לא תומך במיקום.");
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    ({ coords }) => map?.flyTo({ center: [coords.longitude, coords.latitude], zoom: 16 }),
+    () => showToast("לא הצלחנו לקבל את המיקום שלך."),
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 },
+  );
+}
+document.querySelector("#homeLocationButton").addEventListener("click", () => centerMapOnCurrentLocation(homeMap));
+document.querySelector("#nearbyLocationButton").addEventListener("click", () => centerMapOnCurrentLocation(nearbyMap));
 
 document.querySelectorAll(".auth-tab").forEach((tab) => tab.addEventListener("click", () => setAuthMode(tab.dataset.authMode)));
 document.querySelector("#logoutButton").addEventListener("click", () => {
@@ -407,10 +584,6 @@ document.querySelector("#authForm").addEventListener("submit", (event) => {
   localStorage.setItem("report-it-user", JSON.stringify(currentUser));
   renderAccount();
   showToast("התחברת בהצלחה.");
-});
-
-document.querySelectorAll(".map-pin, .location-button").forEach((button) => {
-  button.addEventListener("click", () => showToast("מפת הדיווחים תהיה אינטראקטיבית בשלב 7."));
 });
 
 reportForm.addEventListener("submit", (event) => {
@@ -447,15 +620,17 @@ descriptionInput.addEventListener("input", () => {
 
 function showSelectedPhoto(file) {
   if (!file) return;
-  if (selectedImageUrl) URL.revokeObjectURL(selectedImageUrl);
-  selectedImageUrl = URL.createObjectURL(file);
-  photoImage.src = selectedImageUrl;
-  photoEmptyState.hidden = true;
-  photoPreview.hidden = false;
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    selectedImageUrl = reader.result;
+    photoImage.src = selectedImageUrl;
+    photoEmptyState.hidden = true;
+    photoPreview.hidden = false;
+  });
+  reader.readAsDataURL(file);
 }
 
 function clearSelectedPhoto() {
-  if (selectedImageUrl) URL.revokeObjectURL(selectedImageUrl);
   selectedImageUrl = "";
   photoImage.removeAttribute("src");
   cameraInput.value = "";
@@ -464,8 +639,8 @@ function clearSelectedPhoto() {
   photoEmptyState.hidden = false;
 }
 
-function setLocation(title, details) {
-  selectedLocation = { title, details };
+function setLocation(title, details, coordinates = null) {
+  selectedLocation = { title, details, coordinates, addressPending: Boolean(coordinates), addressResolved: !coordinates };
   locationStatus.classList.add("is-selected");
   locationStatus.querySelector("strong").textContent = title;
   locationStatus.querySelector("p").textContent = details;
@@ -482,8 +657,11 @@ galleryInput.addEventListener("change", handlePhotoInput);
 document.querySelector("#removePhotoButton").addEventListener("click", clearSelectedPhoto);
 
 useCurrentLocationButton.addEventListener("click", () => {
-  if (!navigator.geolocation) {
-    showToast("הדפדפן במכשיר הזה לא תומך במיקום. אפשר לבחור ידנית במפה.");
+  if (!navigator.geolocation || !window.isSecureContext) {
+    manualMap.hidden = false;
+    document.querySelector("#toggleMapButton").textContent = "הסתרת המפה";
+    ensureSelectionMap();
+    locationError.textContent = "כדי להשתמש במיקום הנוכחי פתחי את האפליקציה דרך אתר מאובטח (HTTPS). אפשר לבחור מיקום במפה.";
     return;
   }
 
@@ -492,14 +670,25 @@ useCurrentLocationButton.addEventListener("click", () => {
   navigator.geolocation.getCurrentPosition(
     (position) => {
       const { latitude, longitude } = position.coords;
-      setLocation("המיקום הנוכחי נבחר", `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
+      setLocation("המיקום הנוכחי נבחר", `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`, [longitude, latitude]);
+      reverseGeocodeSelectedLocation([longitude, latitude]);
+      selectionMapInstance?.flyTo({ center: [longitude, latitude], zoom: 16 });
+      if (!selectionMarker && selectionMapInstance) selectionMarker = new maplibregl.Marker({ color: "#20683d" }).addTo(selectionMapInstance);
+      selectionMarker?.setLngLat([longitude, latitude]);
       useCurrentLocationButton.disabled = false;
       useCurrentLocationButton.innerHTML = "<span aria-hidden=\"true\">⌖</span> השתמשי במיקום הנוכחי";
     },
-    () => {
+    (error) => {
       useCurrentLocationButton.disabled = false;
       useCurrentLocationButton.innerHTML = "<span aria-hidden=\"true\">⌖</span> השתמשי במיקום הנוכחי";
-      showToast("לא הצלחנו לקבל מיקום. אפשר לבחור ידנית במפה.");
+      manualMap.hidden = false;
+      document.querySelector("#toggleMapButton").textContent = "הסתרת המפה";
+      ensureSelectionMap();
+      const message = error.code === error.PERMISSION_DENIED
+        ? "לא ניתנה הרשאה למיקום. אפשרי הרשאת מיקום בדפדפן או בחרי מקום במפה."
+        : "לא הצלחנו לאתר את המיקום. אפשר לבחור מקום במפה.";
+      locationError.textContent = message;
+      showToast(message);
     },
     { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 },
   );
@@ -507,16 +696,19 @@ useCurrentLocationButton.addEventListener("click", () => {
 
 document.querySelector("#toggleMapButton").addEventListener("click", () => {
   manualMap.hidden = !manualMap.hidden;
+  document.querySelector("#toggleMapButton").textContent = manualMap.hidden ? "או בחרי מקום במפה" : "הסתרת המפה";
+  if (!manualMap.hidden) window.setTimeout(ensureSelectionMap, 0);
 });
 
-selectionMap.addEventListener("click", (event) => {
-  const bounds = selectionMap.getBoundingClientRect();
-  const left = ((event.clientX - bounds.left) / bounds.width) * 100;
-  const top = ((event.clientY - bounds.top) / bounds.height) * 100;
-  selectedPin.style.left = `${left}%`;
-  selectedPin.style.top = `${top}%`;
-  selectedPin.hidden = false;
-  setLocation("מיקום נבחר במפה", "מיקום משוער שסומן ידנית על המפה");
+document.querySelector("#confirmMapLocationButton").addEventListener("click", () => {
+  if (!selectionMapInstance) {
+    ensureSelectionMap();
+    return;
+  }
+  const center = selectionMapInstance.getCenter();
+  const coordinates = [center?.lng ?? defaultMapCenter[0], center?.lat ?? defaultMapCenter[1]];
+  selectMapLocation(coordinates);
+  mapSelectionNote.textContent = "המיקום במרכז המפה סומן. אפשר להמשיך לסיכום הדיווח.";
 });
 
 document.querySelector("#reviewReportButton").addEventListener("click", () => {
@@ -539,11 +731,15 @@ submitReportButton.addEventListener("click", () => {
     const title = document.querySelector("#reportTitleInput").value.trim() || category;
     const description = descriptionInput.value.trim();
     const submittedImageUrl = selectedImageUrl;
-    const icons = { "אשפה ולכלוך": "🗑️", "פח מלא": "♻️", "גזם": "🌿", "מפגע סביבתי": "⚠️", "אחר": "📍" };
-    reports.unshift({ id: `report-${reportCounter}`, title, category, description, place: "דיווח חדש · עכשיו", location: selectedLocation.details, status: "התקבל", type: "pending", visual: "litter", icon: icons[category] || "📍", imageUrl: submittedImageUrl, mapX: 56, mapY: 58, timeline: [{ title: "הדיווח התקבל", text: "הפנייה נקלטה במערכת העירונית.", time: "עכשיו" }] });
+    const icons = { "אשפה ולכלוך": "🗑️", "פח מלא": "♻️", "גזם": "🌿", "מפגע סביבתי": "🌍", "בור בכביש": "🕳️", "תאורת רחוב": "💡", "דליפת מים": "💧", "מדרכה פגומה": "🚧", "מפגע בטיחותי": "⚠️", "אחר": "📍" };
+    const newReport = { id: `report-${reportCounter}`, title, category, description, place: "דיווח חדש · עכשיו", location: selectedLocation.details, status: "התקבל", type: "pending", visual: "litter", icon: icons[category] || "📍", imageUrl: submittedImageUrl, coordinates: selectedLocation.coordinates || defaultMapCenter, timeline: [{ title: "הדיווח התקבל", text: "הפנייה נקלטה במערכת העירונית.", time: "עכשיו" }] };
+    reports.unshift(newReport);
     selectedImageUrl = "";
     saveReports();
+    selectedNearbyReportId = newReport.id;
     renderReports();
+    nearbyMap?.flyTo({ center: newReport.coordinates, zoom: 16 });
+    selectNearbyReport(newReport.id);
     document.querySelector("#referenceNumber").textContent = `RI-2026-${reportCounter}`;
     reviewView.hidden = true;
     successView.hidden = false;
@@ -565,3 +761,4 @@ document.querySelector("#successHomeButton").addEventListener("click", () => {
 renderReports();
 updateDescriptionCount();
 renderAccount();
+initializeMapSupport();

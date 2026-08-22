@@ -8,10 +8,6 @@ The application was designed for **Clean Ono — Kiryat Ono Municipality**. It p
 
 ### [Open Report It](https://yafitavazov.github.io/report-it/)
 
-<p align="center">
-  <img src="docs/screenshots/mobile-overview.png" alt="Full mobile view of the Report It application" width="300" />
-</p>
-
 ## Features
 
 - Create a new report through a guided three-step process.

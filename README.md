@@ -1,80 +1,70 @@
-# Report It — דיווחים לעיר נקייה
+# Report It — Municipal Issue Reporting
 
-אפליקציית ווב רספונסיבית לדיווח על מפגעים עירוניים, מעקב אחר הטיפול בהם וצפייה בדיווחים על גבי מפה.
+A responsive web application for reporting municipal issues, tracking their progress, and viewing nearby reports on an interactive map.
 
-האפליקציה עוצבה עבור **Clean Ono — עיריית קריית אונו**, עם ממשק מלא בעברית ותהליך דיווח קצר וברור שמתאים למחשב ולמובייל.
+The application was designed for **Clean Ono — Kiryat Ono Municipality**. It provides a complete right-to-left Hebrew interface and a clear, mobile-friendly reporting flow.
 
-### [לצפייה באפליקציה החיה](https://yafitavazov.github.io/report-it/)
+## Live Demo
 
-<p align="center">
-  <img src="docs/screenshots/mobile-overview.png" alt="תצוגת מובייל מלאה של Report It" width="300" />
-</p>
-
-## מה אפשר לעשות באפליקציה?
-
-- לפתוח דיווח חדש בתהליך מודרך של שלושה שלבים.
-- לבחור סוג מפגע, להוסיף תיאור ותמונה ולסמן מיקום.
-- להשתמש במיקום הנוכחי או לבחור נקודה ידנית על המפה.
-- לצפות בדיווחים מהאזור ולסנן אותם לפי קטגוריה וסטטוס.
-- לעקוב אחר דיווחים אישיים וסטטוס הטיפול בהם.
-- לצפות בפרטי הדיווח, במיקום ובציר הזמן של הטיפול.
-- להשתמש בממשק רספונסיבי ונגיש בעברית מלאה (RTL).
-
-## מסכים מרכזיים
-
-### מסך הבית
-
-סקירה מהירה של דיווחים בסביבה, מפה אינטראקטיבית והדיווחים האחרונים של המשתמשת.
+### [Open Report It](https://yafitavazov.github.io/report-it/)
 
 <p align="center">
-  <img src="docs/screenshots/home-dashboard.png" alt="מסך הבית של Report It" width="820" />
+  <img src="docs/screenshots/mobile-overview.png" alt="Full mobile view of the Report It application" width="300" />
 </p>
 
-### יצירת דיווח
+## Features
 
-בחירת סוג המפגע והוספת פרטים קצרים, ולאחר מכן הוספת תמונה ובחירת מיקום מדויק.
+- Create a new report through a guided three-step process.
+- Select an issue category and add a title, description, and photo.
+- Use the current location or select a point manually on the map.
+- Explore nearby reports and filter them by category and status.
+- Track personal reports and their handling status.
+- View report details, location, and progress timeline.
+- Use a responsive and accessible right-to-left interface.
+
+## Main Screens
+
+### Home Dashboard
+
+The home screen provides a quick overview of nearby reports, an interactive map, and the user's latest submissions.
 
 <p align="center">
-  <img src="docs/screenshots/new-report-details.png" alt="בחירת קטגוריה והזנת פרטי המפגע" width="48%" />
-  <img src="docs/screenshots/new-report-photo-location.png" alt="הוספת תמונה ובחירת מיקום לדיווח" width="48%" />
+  <img src="docs/screenshots/home-dashboard.png" alt="Report It home dashboard" width="820" />
 </p>
 
-### אישור דיווח ומפת הסביבה
+### Create a Report
 
-בסיום מתקבל מספר פנייה. במפת הסביבה אפשר לבחור דיווח ולפתוח את פרטיו.
+Users can select an issue category, enter a short description, add a photo, and choose an accurate location.
 
 <p align="center">
-  <img src="docs/screenshots/report-success.png" alt="מסך אישור קליטת הדיווח" width="48%" />
-  <img src="docs/screenshots/nearby-report-map.png" alt="מפת דיווחים בסביבה" width="48%" />
+  <img src="docs/screenshots/new-report-details.png" alt="Issue category and report details form" width="48%" />
+  <img src="docs/screenshots/new-report-photo-location.png" alt="Photo upload and location selection screen" width="48%" />
 </p>
 
-## טכנולוגיות
+### Report Confirmation and Nearby Map
 
-- HTML5, CSS3 ו־JavaScript ללא תלויות build.
-- [MapLibre GL JS](https://maplibre.org/) להצגת מפות אינטראקטיביות.
-- מפות מבוססות OpenFreeMap ו־OpenStreetMap.
-- Nominatim להמרת מיקום לכתובת.
-- Geolocation API לקבלת מיקום המשתמשת.
-- Local Storage לשמירת משתמשת ודיווחים בדפדפן.
+After submission, the user receives a reference number. The nearby map allows users to select reports and open their details.
 
-## הרצה מקומית
+<p align="center">
+  <img src="docs/screenshots/report-success.png" alt="Successful report submission screen" width="48%" />
+  <img src="docs/screenshots/nearby-report-map.png" alt="Nearby municipal reports map" width="48%" />
+</p>
 
-אין צורך בהתקנת חבילות. לאחר שכפול המאגר, הפעילו שרת מקומי מתוך תיקיית הפרויקט:
+## Technologies
 
-```bash
-python3 -m http.server 8000
-```
+- HTML5, CSS3, and vanilla JavaScript.
+- [MapLibre GL JS](https://maplibre.org/) for interactive maps.
+- OpenFreeMap and OpenStreetMap map data.
+- Nominatim for reverse geocoding.
+- Geolocation API for the user's current location.
+- Local Storage for saving user details and reports in the browser.
 
-לאחר מכן פתחו בדפדפן: [http://localhost:8000](http://localhost:8000)
-
-> המפות, איתור הכתובת והמיקום דורשים חיבור לאינטרנט והרשאת מיקום בדפדפן.
-
-## מבנה הפרויקט
+## Project Structure
 
 ```text
 report-it/
-├── index.html          # מבנה המסכים
-├── styles.css          # עיצוב רספונסיבי ו־RTL
-├── app.js              # לוגיקה, דיווחים ומפות
-└── docs/screenshots/   # תמונות לתיעוד הפרויקט
+├── index.html          # Application screens and markup
+├── styles.css          # Responsive and RTL styling
+├── app.js              # Application logic, reports, and maps
+└── docs/screenshots/   # Project screenshots used in this README
 ```
